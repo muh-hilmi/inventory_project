@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_project/core/theme/color.dart';
 import 'package:inventory_project/core/theme/typo.dart';
+import 'package:inventory_project/features/auth/data/auth_services.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -43,8 +44,8 @@ class ProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(
                 onPressed: () async {
-                  // await AuthService.signOut();
-                  // Navigator.pop(context);
+                  await AuthService.signOut();
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(40)),

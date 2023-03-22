@@ -5,6 +5,7 @@ import 'package:inventory_project/core/constants/strings.dart';
 import 'package:inventory_project/core/theme/color.dart';
 import 'package:inventory_project/core/theme/typo.dart';
 import 'package:inventory_project/core/widget/loading_dialog.dart';
+import 'package:inventory_project/features/auth/data/auth_services.dart';
 import 'package:inventory_project/features/auth/presentation/widget/custom_test_field.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -116,7 +117,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                if (_key.currentState!.validate()) {
+                  try {
+                    var result = await AuthService.signUp(
+                        _emailController.text, _passwordController.text);
+                  } on FirebaseAuthException catch (e) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(e.message!)));
+                  } catch (e) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('error')));
+                  }
+                }
+              },
               style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(40)),
               child: Text(

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inventory_project/core/theme/color.dart';
 import 'package:inventory_project/core/theme/typo.dart';
-import 'package:inventory_project/features/auth/presentation/forgot_password_screen.dart';
+import 'package:inventory_project/features/auth/data/auth_services.dart';
+import 'package:inventory_project/features/auth/presentation/forgot_password.dart';
 import 'package:inventory_project/features/auth/presentation/register_screen.dart';
 import 'package:inventory_project/features/auth/presentation/widget/custom_test_field.dart';
 import 'package:inventory_project/features/inventory/presentation/home_screen.dart';
@@ -57,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Text(
               'Login',
               style:
-                  .headline.copyWith(fontWeight: FontWeight.w700),
+                  AppTypography.headline.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
           const SizedBox(height: 20),
@@ -119,11 +120,24 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
               onPressed: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => HomeScreen(),
+                //     ));
+                if (_key.currentState!.validate()) {
+                  try {
+                    var result = await AuthService.signIn(
+                        _emailController.text, _passwordController.text);
+                    Navigator.pop(context);
+                  } on FirebaseAuthException catch (e) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(e.message!)));
+                  } catch (e) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('error')));
+                  }
+                }
               },
               style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(40)),
